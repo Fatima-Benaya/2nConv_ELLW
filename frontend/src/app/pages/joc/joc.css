@@ -1,0 +1,7 @@
+:host {
+  display: block;
+  padding: 32px 56px 64px;
+  font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+  color: #0f172a;
+  background: radial-gradient(circle at top, #fff7ed, #f8fafc 45%);
+}

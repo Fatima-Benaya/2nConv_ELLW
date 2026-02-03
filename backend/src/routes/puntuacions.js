@@ -19,3 +19,6 @@ router.post('/puntuacions', async (req, res, next) => {
     next(error);
   }
 });
+
+
+export default router;
