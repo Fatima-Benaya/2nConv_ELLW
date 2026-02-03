@@ -11,14 +11,18 @@ const PuntuacioSchema = new mongoose.Schema(
     puntuacio: {
       type: Number,
       required: true,
-      min : 0,
+      min: 0,
     },
-
     nivell: {
-      type: String,
+      type: Number,
       required: true,
+      min: 2,
     },
-
+    data_joc: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
   },
   { timestamps: true }
 );

@@ -1,19 +1,150 @@
+<div class="joc-container">
+  <header class="joc-header">
+    <a routerLink="/" class="back-link">← Tornar</a>
+    <h1>Joc de Temps</h1>
+  </header>
 
-<div class="joc">
-  <form class="form" (ngSubmit)="submitOrder()">
+  <!-- Level selection (before game starts) -->
+  @if (!gameStarted()) {
+    <div class="setup-panel">
+      <div class="form-group">
+        <label for="nivell">Introdueix el nivell de dificultat (mida de la quadrícula NxN):</label>
+        <input
+          type="number"
+          id="nivell"
+          [ngModel]="nivell()"
+          (ngModelChange)="nivell.set($event)"
+          min="2"
+          max="10"
+        />
+      </div>
+      <button class="btn primary" (click)="confirmNivell(); startGame()">Començar Joc</button>
 
-    <label>
-      Inrodueix el nivell de dificultat
-      <input
-        type="nivell"
-        [ngModel]="nivell()"
-        (ngModelChange)="nivell.set($event)"
-        name="nivell"
-        required
-      />
-    </label>
+      <!-- Local best score for selected level -->
+      @if (currentLevelBestScore(); as best) {
+        <div class="best-score-info">
+          <p>La teva millor puntuació per nivell {{ nivell() }}: <strong>{{ best.puntuacio }}s</strong></p>
+        </div>
+      }
 
-    <button class="primary" type="submit" >Confirmar nivell</button>
-  </form>
+      <!-- Top 5 scores -->
+      <div class="top-scores">
+        <h3>Top 5 Puntuacions (Nivell {{ nivell() }})</h3>
+        @if (isLoadingTopScores()) {
+          <p>Carregant...</p>
+        } @else if (topScores().length === 0) {
+          <p>No hi ha puntuacions registrades per aquest nivell.</p>
+        } @else {
+          <ol>
+            @for (score of topScores(); track score._id) {
+              <li>
+                <span class="player-name">{{ score.nom_usuari }}</span>
+                <span class="player-score">{{ score.puntuacio }}s</span>
+              </li>
+            }
+          </ol>
+        }
+      </div>
+    </div>
+  }
 
+  <!-- Game in progress -->
+  @if (gameStarted() && !gameOver()) {
+    <div class="game-panel">
+      <div class="timer">
+        <span class="timer-label">Temps restant:</span>
+        <span class="timer-value" [class.warning]="timeRemaining() <= 3">{{ timeRemaining() }}s</span>
+      </div>
+
+      <div class="grid" [style.--grid-size]="nivell()">
+        @for (row of grid(); track $index) {
+          @for (cell of row; track cell.col) {
+            <button
+              [class]="getCellClass(cell)"
+              [disabled]="cell.revealed"
+              (click)="revealCell(cell)"
+            >
+              {{ getCellContent(cell) }}
+            </button>
+          }
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Game over -->
+  @if (gameOver()) {
+    <div class="game-over-panel">
+      <h2>Joc Acabat!</h2>
+      <p class="final-score">Puntuació final: <strong>{{ totalTimePlayed() }} segons</strong></p>
+
+      <!-- Local best score -->
+      @if (currentLevelBestScore(); as best) {
+        <p class="best-info">La teva millor puntuació (nivell {{ nivell() }}): <strong>{{ best.puntuacio }}s</strong></p>
+      }
+
+      <!-- Register score -->
+      @if (!submitSuccess()) {
+        <div class="register-form">
+          <h3>Registrar Puntuació</h3>
+          <div class="form-group">
+            <label for="nomUsuari">Nom d'usuari:</label>
+            <input
+              type="text"
+              id="nomUsuari"
+              [ngModel]="nomUsuari()"
+              (ngModelChange)="nomUsuari.set($event)"
+              minlength="2"
+              placeholder="Introdueix el teu nom"
+            />
+          </div>
+          @if (submitError()) {
+            <p class="error">{{ submitError() }}</p>
+          }
+          <div class="button-group">
+            <button
+              class="btn primary"
+              [disabled]="isSubmitting()"
+              (click)="registerScore()"
+            >
+              {{ isSubmitting() ? 'Registrant...' : 'Registrar Puntuació' }}
+            </button>
+
+            @if (canUpdateScore()) {
+              <button
+                class="btn secondary"
+                [disabled]="isSubmitting()"
+                (click)="updateScore()"
+              >
+                {{ isSubmitting() ? 'Actualitzant...' : 'Actualitzar Puntuació Anterior' }}
+              </button>
+            }
+          </div>
+        </div>
+      } @else {
+        <p class="success">Puntuació registrada correctament!</p>
+      }
+
+      <button class="btn primary" (click)="resetGame()">Jugar de nou</button>
+
+      <!-- Top 5 scores -->
+      <div class="top-scores">
+        <h3>Top 5 Puntuacions (Nivell {{ nivell() }})</h3>
+        @if (isLoadingTopScores()) {
+          <p>Carregant...</p>
+        } @else if (topScores().length === 0) {
+          <p>No hi ha puntuacions registrades per aquest nivell.</p>
+        } @else {
+          <ol>
+            @for (score of topScores(); track score._id) {
+              <li>
+                <span class="player-name">{{ score.nom_usuari }}</span>
+                <span class="player-score">{{ score.puntuacio }}s</span>
+              </li>
+            }
+          </ol>
+        }
+      </div>
+    </div>
+  }
 </div>
