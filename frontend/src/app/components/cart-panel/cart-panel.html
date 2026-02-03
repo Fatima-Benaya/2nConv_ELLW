@@ -1,0 +1,51 @@
+<section class="cart-panel" id="cart">
+  <div class="section-header">
+    <div>
+      <p class="eyebrow">Tu pedido</p>
+      <h2>Resumen del carrito</h2>
+      <p class="section-subtitle">Revisa cantidades antes de confirmar.</p>
+    </div>
+  </div>
+  <div class="cart">
+    @if (cart.length === 0) {
+      <div class="empty">Tu carrito está vacío.</div>
+    }
+    @if (cart.length) {
+      <div class="cart-items">
+        @for (item of cart; track item.foodId) {
+          <div class="cart-item">
+            <div>
+              <p class="item-name">{{ item.name }}</p>
+              <p class="item-price">{{ item.price | currency : 'EUR' : 'symbol' : '1.2-2' }}</p>
+            </div>
+            <div class="controls">
+              <input
+                type="number"
+                min="1"
+                [ngModel]="item.quantity"
+                (ngModelChange)="quantityChange.emit({ foodId: item.foodId, quantity: $event })"
+                [name]="'quantity-' + item.foodId"
+              />
+              <button class="ghost" type="button" (click)="removeItem.emit(item.foodId)">Quitar</button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+    @if (cart.length) {
+      <div class="cart-totals">
+        <div>
+          <span>Artículos</span>
+          <span>{{ cartCount }}</span>
+        </div>
+        <div>
+          <span>Total</span>
+          <span>{{ cartTotal | currency : 'EUR' : 'symbol' : '1.2-2' }}</span>
+        </div>
+        <button class="primary" type="button" (click)="submitOrder.emit()" [disabled]="isLoading">
+          Confirmar pedido
+        </button>
+      </div>
+    }
+  </div>
+</section>

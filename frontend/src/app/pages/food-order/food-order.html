@@ -1,0 +1,270 @@
+<header class="top-bar">
+  <div class="brand">
+    <img class="brand-mark" src="/images/image.png" alt="Logo PideYa" />
+    <div>
+      <p class="brand-title">PideYa</p>
+      <p class="brand-subtitle">Cocina mediterránea artesanal</p>
+    </div>
+  </div>
+  <nav class="nav">
+    <a href="#menu">Menú</a>
+    <a routerLink="/ingredientes">Ingredientes</a>
+    <a routerLink="/carrito">Carrito</a>
+    <a href="#contact">Contacto</a>
+    @if (!isAuthenticated()) {
+      <a routerLink="/login">Login</a>
+    }
+  </nav>
+  <div class="nav-cta">
+    @if (isAuthenticated()) {
+      <span class="nav-greeting">Hola, {{ userName() }}</span>
+    }
+    @if (!isAuthenticated()) {
+      <a class="primary" routerLink="/carrito">Pedir ahora</a>
+    }
+    @if (isAuthenticated()) {
+      <a class="primary" routerLink="/perfil">Mi perfil</a>
+    }
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <p class="eyebrow">Entrega rápida y segura</p>
+    <h1>Tu menú diario sin salir de casa</h1>
+    <p class="subtitle">
+      Descubre nuestro menú mediterráneo, platos diarios y opciones saludables. Haz tu pedido en minutos y
+      recíbelo caliente en la puerta de tu casa.
+    </p>
+    <div class="hero-actions">
+      <a class="primary" href="#menu">Ver menú</a>
+      <a class="ghost" routerLink="/carrito">Iniciar pedido</a>
+    </div>
+    <div class="hero-badges">
+      <span>⭐ 4.8/5 Valoraciones</span>
+      <span>🚚 30-40 min promedio</span>
+      <span>🥗 Opciones saludables</span>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <img
+      class="hero-main"
+      src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80"
+      alt="Plato mediterráneo"
+    />
+    <div class="hero-thumbs">
+      <img
+        src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=600&q=80"
+        alt="Ensalada fresca"
+      />
+      <img
+        src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80"
+        alt="Plato gourmet"
+      />
+      <img
+        src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=600&q=80"
+        alt="Pasta artesanal"
+      />
+    </div>
+  </div>
+</section>
+
+@if (cartCount() > 0) {
+  <a class="floating-cart" routerLink="/carrito">
+    <span>🛒</span>
+    <span>Ver carrito ({{ cartCount() }})</span>
+  </a>
+}
+
+<section class="trust-bar">
+  <div>
+    <p class="trust-title">Pago seguro</p>
+    <p class="trust-subtitle">Tarjeta, Bizum y efectivo</p>
+  </div>
+  <div>
+    <p class="trust-title">Entrega en 30-45 min</p>
+    <p class="trust-subtitle">Seguimiento en tiempo real</p>
+  </div>
+  <div>
+    <p class="trust-title">Atención al cliente</p>
+    <p class="trust-subtitle">Soporte 12/7</p>
+  </div>
+</section>
+
+<section class="banner">
+  <div>
+    <p class="eyebrow">Promoción de temporada</p>
+    <h2>2x1 en ensaladas mediterráneas</h2>
+    <p class="section-subtitle">Válido de lunes a jueves · hasta las 16:00</p>
+  </div>
+  <button class="primary" type="button" (click)="scrollToMenu()">Aprovechar oferta</button>
+</section>
+
+
+<section class="menu" id="menu">
+  <div class="section-header">
+    <div>
+      <p class="eyebrow">Menú del día</p>
+      <h2>Platos preparados con ingredientes frescos</h2>
+      <p class="section-subtitle">Actualizamos el menú cada mañana para que siempre tengas nuevas opciones.</p>
+    </div>
+    <div class="menu-actions">
+      <div class="source-toggle" role="group" aria-label="Fuente del menú">
+        <button
+          type="button"
+          [class.active]="useApiFoods()"
+          (click)="setFoodSource('api')"
+        >
+          API
+        </button>
+        <button
+          type="button"
+          [class.active]="!useApiFoods()"
+          (click)="setFoodSource('demo')"
+        >
+          Demo
+        </button>
+      </div>
+      <div class="search-bar">
+        <input
+          type="search"
+          placeholder="Buscar platos, ingredientes..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+          name="search"
+        />
+        <button class="ghost" type="button" (click)="clearSearch()">Limpiar</button>
+      </div>
+    </div>
+  </div>
+
+  @if (!isLoading() && foods().length) {
+    <p class="menu-count">
+      Mostrando {{ filteredFoods().length }} de {{ foods().length }} platos
+    </p>
+  }
+
+  @if (isLoading()) {
+    <div class="loading">Cargando menú...</div>
+  }
+  @if (!isLoading() && foods().length === 0) {
+    <div class="empty">
+      No hay platos disponibles. Agrega algunos desde el backend.
+    </div>
+  }
+  @if (!isLoading() && foods().length && filteredFoods().length === 0) {
+    <div class="empty">
+      No encontramos resultados con ese criterio.
+    </div>
+  }
+  @if (!isLoading() && filteredFoods().length) {
+    <div class="grid">
+      @for (food of filteredFoods(); track food._id) {
+        <article class="card">
+          <img
+            [src]="food.imageUrl"
+            [alt]="food.name"
+            loading="lazy"
+          />
+          <div class="card-body">
+            <div class="card-heading">
+          <div>
+            <h3>{{ food.name }}</h3>
+            <p class="category">{{ food.category }}</p>
+          </div>
+          <p class="price">{{ food.price | currency : 'EUR' : 'symbol' : '1.2-2' }}</p>
+        </div>
+        <p class="description">{{ food.description }}</p>
+        <button class="secondary" type="button" (click)="addToCart(food)" [disabled]="isLoading()">
+          Añadir al carrito
+        </button>
+      </div>
+    </article>
+      }
+    </div>
+  }
+</section>
+
+<section class="coverage">
+  <div>
+    <p class="eyebrow">Zona de reparto</p>
+    <h2>Estamos cerca de ti</h2>
+    <p class="section-subtitle">
+      Cobertura en Tarragona, Reus, Salou y alrededores. Tiempo medio de entrega 35 minutos.
+    </p>
+    <div class="coverage-tags">
+      <span>Tarragona</span>
+      <span>Reus</span>
+      <span>Salou</span>
+      <span>Cambrils</span>
+    </div>
+  </div>
+  <div class="coverage-map">
+    <iframe
+      title="Mapa de cobertura en Tarragona y alrededores"
+      src="https://www.openstreetmap.org/export/embed.html?bbox=0.998%2C41.02%2C1.35%2C41.23&layer=mapnik&marker=41.1189%2C1.2445"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+    <div class="coverage-overlay">
+      <p>Zona activa: Tarragona · Reus · Salou</p>
+      <span>Entrega estimada 30-45 min</span>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div>
+    <p class="eyebrow">Opiniones</p>
+    <h2>Clientes que repiten cada semana</h2>
+    <p class="section-subtitle">Calidad constante y servicio impecable.</p>
+  </div>
+  <div class="testimonial-grid">
+    <article>
+      <p>"Entrega puntual y la comida llegó caliente. Repetiremos."</p>
+      <span>María G. · Tarragona</span>
+    </article>
+    <article>
+      <p>"Menú variado y opciones saludables reales. Muy recomendable."</p>
+      <span>David R. · Reus</span>
+    </article>
+    <article>
+      <p>"El catering de oficina fue un éxito total. Atención excelente."</p>
+      <span>Equipo NovaTech</span>
+    </article>
+  </div>
+</section>
+
+<section class="faq" id="contact">
+  <div>
+    <p class="eyebrow">¿Necesitas ayuda?</p>
+    <h2>Estamos disponibles todos los días</h2>
+    <p>Teléfono +34 900 123 456 · contacto@pideya.com</p>
+  </div>
+  <div class="faq-cards">
+    <article>
+      <h4>Horario</h4>
+      <p>Lunes a Domingo de 12:00 a 23:00</p>
+    </article>
+    <article>
+      <h4>Zona de entrega</h4>
+      <p>Reparto en Tarragona y alrededores sin coste extra.</p>
+    </article>
+  </div>
+</section>
+
+<footer class="footer">
+  <div>
+    <p class="brand-title">PideYa</p>
+    <p class="footer-text">Cocina mediterránea, saludable y rápida en Tarragona.</p>
+  </div>
+  <div>
+    <p class="footer-title">Contacto</p>
+    <p class="footer-text">+34 900 123 456</p>
+    <p class="footer-text">contacto@pideya.com</p>
+  </div>
+  <div>
+    <p class="footer-title">Horario</p>
+    <p class="footer-text">L-D 12:00 - 23:00</p>
+  </div>
+</footer>

@@ -1,0 +1,63 @@
+<section class="signup-wrapper">
+  <div class="signup-card">
+    <div class="signup-header">
+      <p class="eyebrow">Registro</p>
+      <h1>Crea tu cuenta</h1>
+      <p class="subtitle">Guarda tus direcciones y acelera tus pedidos.</p>
+    </div>
+
+    <form class="form" (ngSubmit)="submit()">
+      <label>
+        Nombre completo
+        <input
+          type="text"
+          [ngModel]="name()"
+          (ngModelChange)="name.set($event)"
+          name="name"
+          required
+        />
+      </label>
+      <label>
+        Email
+        <input
+          type="email"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          name="email"
+          required
+        />
+      </label>
+      <label>
+        Contraseña
+        <input
+          type="password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          name="password"
+          required
+        />
+      </label>
+      <label>
+        Repite contraseña
+        <input
+          type="password"
+          [ngModel]="confirmPassword()"
+          (ngModelChange)="confirmPassword.set($event)"
+          name="confirmPassword"
+          required
+        />
+      </label>
+      <button class="primary" type="submit" [disabled]="isLoading()">
+        {{ isLoading() ? 'Creando…' : 'Crear cuenta' }}
+      </button>
+      @if (errorMessage()) {
+        <p class="message">{{ errorMessage() }}</p>
+      }
+    </form>
+
+    <div class="signup-footer">
+      <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+      <a routerLink="/">Volver al menú</a>
+    </div>
+  </div>
+</section>

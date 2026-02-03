@@ -1,0 +1,83 @@
+<header class="top-bar">
+  <div class="brand">
+    <img class="brand-mark" src="/images/image.png" alt="Logo PideYa" />
+    <div>
+      <p class="brand-title">PideYa</p>
+      <p class="brand-subtitle">Ingredientes reales</p>
+    </div>
+  </div>
+  <nav class="nav">
+    <a routerLink="/">Inicio</a>
+    <a routerLink="/carrito">Carrito</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div>
+    <p class="eyebrow">Ingredientes</p>
+    <h1>Ingredientes que usamos a diario</h1>
+    <p class="subtitle">Selección cuidada para una cocina fresca y equilibrada.</p>
+    <div class="hero-actions">
+      <button class="primary" type="button" (click)="loadIngredients()" [disabled]="isLoading()">
+        Actualizar
+      </button>
+      <a class="ghost" routerLink="/">Volver</a>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-header">
+    <div>
+      <h2>Encuentra tu ingrediente</h2>
+    </div>
+    <div class="search-bar">
+      <input
+        type="search"
+        placeholder="Ej. chicken, basil, salmon"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+      />
+      <button class="ghost" type="button" (click)="clearSearch()">Limpiar</button>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">Cargando ingredientes...</div>
+  }
+  @if (errorMessage()) {
+    <p class="message">{{ errorMessage() }}</p>
+  }
+
+  @if (!isLoading() && visibleIngredients().length) {
+    <div class="grid">
+      @for (ingredient of visibleIngredients(); track ingredient.idIngredient) {
+        <article class="card">
+          <img [src]="getImageUrl(ingredient.strIngredient)" [alt]="ingredient.strIngredient" loading="lazy" />
+          <div>
+            <h3>{{ ingredient.strIngredient }}</h3>
+            @if (ingredient.strType) {
+              <span>{{ ingredient.strType }}</span>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+
+  @if (!isLoading() && !visibleIngredients().length) {
+    <div class="empty">
+      No hay resultados.
+    </div>
+  }
+
+  @if (filteredIngredients().length > 16) {
+    <button
+      class="secondary"
+      type="button"
+      (click)="toggleExpanded()"
+    >
+      {{ isExpanded() ? 'Ver menos' : 'Ver más' }}
+    </button>
+  }
+</section>

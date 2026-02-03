@@ -1,0 +1,101 @@
+:host {
+  display: block;
+  padding: 32px 56px 64px;
+  font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+  color: #0f172a;
+  background: radial-gradient(circle at top, #fff7ed, #f8fafc 45%);
+}
+
+.login-wrapper {
+  display: grid;
+  place-items: center;
+}
+
+.login-card {
+  width: min(420px, 100%);
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 32px;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.12);
+}
+
+.login-header {
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  color: #ea580c;
+  font-weight: 600;
+  margin: 0;
+}
+
+h1 {
+  margin: 8px 0;
+  font-size: 2rem;
+}
+
+.subtitle {
+  margin: 0;
+  color: #64748b;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.form label {
+  display: grid;
+  gap: 8px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form input {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 1rem;
+  background: #f8fafc;
+}
+
+.primary {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  background: #ea580c;
+  color: #ffffff;
+  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.3);
+}
+
+.message {
+  margin-top: 4px;
+  color: #dc2626;
+  font-size: 0.9rem;
+}
+
+.login-footer {
+  margin-top: 18px;
+  display: grid;
+  gap: 8px;
+  text-align: center;
+  color: #64748b;
+}
+
+.login-footer a {
+  color: #ea580c;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  :host {
+    padding: 24px;
+  }
+}

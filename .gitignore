@@ -1,0 +1,20 @@
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build outputs
+/dist
+/tmp
+/out-tsc
+/coverage
+
+# Logs
+*.log
+
+# Environment
+.env
+
+# System files
+.DS_Store
+Thumbs.db

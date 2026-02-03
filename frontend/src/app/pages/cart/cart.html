@@ -1,0 +1,143 @@
+<section class="cart-hero">
+  <div>
+    <p class="eyebrow">Tu pedido</p>
+    <h1>Carrito y datos de entrega</h1>
+    <p class="subtitle">Revisa tu selección y confirma la dirección de entrega.</p>
+  </div>
+  <a class="ghost" routerLink="/">Volver al inicio</a>
+</section>
+
+<div class="cart-layout">
+  <app-carrito
+    [cart]="cart()"
+    [cartCount]="cartCount()"
+    [cartTotal]="cartTotal()"
+    [isLoading]="isLoading()"
+    (quantityChange)="updateQuantity($event.foodId, $event.quantity)"
+    (removeItem)="removeItem($event)"
+    (submitOrder)="submitOrder()"
+  />
+
+  <form class="form" (ngSubmit)="submitOrder()">
+    <h2>Datos de entrega</h2>
+    <label>
+      Nombre completo
+      <input
+        type="text"
+        [ngModel]="customerName()"
+        (ngModelChange)="customerName.set($event)"
+        name="customerName"
+        required
+      />
+    </label>
+    <label>
+      Dirección
+      <input
+        type="text"
+        [ngModel]="address()"
+        (ngModelChange)="address.set($event)"
+        name="address"
+        required
+      />
+    </label>
+    <label>
+      Teléfono
+      <input
+        type="tel"
+        [ngModel]="phone()"
+        (ngModelChange)="phone.set($event)"
+        name="phone"
+        required
+      />
+    </label>
+    <label>
+      Correo electrónico
+      <input
+        type="email"
+        [ngModel]="email()"
+        (ngModelChange)="email.set($event)"
+        name="email"
+        required
+      />
+    </label>
+    <label>
+      Método de pago
+      <select
+        [ngModel]="paymentMethod()"
+        (ngModelChange)="paymentMethod.set($event)"
+        name="paymentMethod"
+        required
+      >
+        <option value="" disabled>Selecciona una opción</option>
+        <option value="Tarjeta">Tarjeta</option>
+        <option value="Bizum">Bizum</option>
+        <option value="Efectivo">Efectivo</option>
+      </select>
+    </label>
+    @if (paymentMethod() === 'Tarjeta') {
+      <div class="payment-details">
+        <label>
+          Nombre del titular
+          <input
+            type="text"
+            [ngModel]="cardHolder()"
+            (ngModelChange)="cardHolder.set($event)"
+            name="cardHolder"
+            required
+          />
+        </label>
+        <label>
+          Número de tarjeta
+          <input
+            type="text"
+            [ngModel]="cardNumber()"
+            (ngModelChange)="cardNumber.set($event)"
+            name="cardNumber"
+            maxlength="19"
+            required
+          />
+        </label>
+        <label>
+          Caducidad
+          <input
+            type="text"
+            [ngModel]="cardExpiry()"
+            (ngModelChange)="cardExpiry.set($event)"
+            name="cardExpiry"
+            placeholder="MM/AA"
+            required
+          />
+        </label>
+      </div>
+    }
+    @if (paymentMethod() === 'Bizum') {
+      <div class="payment-details">
+        <label>
+          Teléfono Bizum
+          <input
+            type="tel"
+            [ngModel]="bizumPhone()"
+            (ngModelChange)="bizumPhone.set($event)"
+            name="bizumPhone"
+            required
+          />
+        </label>
+        <p class="helper">Te enviaremos la solicitud Bizum al confirmar.</p>
+      </div>
+    }
+    @if (paymentMethod() === 'Efectivo') {
+      <div class="payment-details">
+        <p class="helper">Paga al recibir el pedido en tu domicilio.</p>
+      </div>
+    }
+    <button class="primary" type="submit" [disabled]="isFormInvalid() || isLoading()">
+      Enviar pedido
+    </button>
+    @if (errorMessage()) {
+      <p class="message">{{ errorMessage() }}</p>
+    }
+    @if (successMessage()) {
+      <p class="message success">{{ successMessage() }}</p>
+    }
+  </form>
+</div>

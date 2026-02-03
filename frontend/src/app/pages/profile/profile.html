@@ -1,0 +1,46 @@
+<section class="profile-wrapper">
+  @if (user()) {
+    <div class="profile-card">
+      <header class="profile-hero">
+        <div class="profile-avatar">
+          {{ user()?.name?.charAt(0) ?? 'U' }}
+        </div>
+        <div>
+          <p class="eyebrow">Perfil</p>
+          <h1>{{ user()?.name }}</h1>
+          <p class="subtitle">Cuenta activa y lista para pedir.</p>
+        </div>
+      </header>
+
+      <div class="profile-grid">
+        <article class="profile-panel">
+          <h3>Datos personales</h3>
+          <div class="profile-row">
+            <span>Nombre</span>
+            <strong>{{ user()?.name }}</strong>
+          </div>
+          <div class="profile-row">
+            <span>Email</span>
+            <strong>{{ user()?.email }}</strong>
+          </div>
+        </article>
+
+        <article class="profile-panel">
+          <h3>Estado</h3>
+          <p class="status-badge">Sesión activa</p>
+          <p class="helper">Puedes cerrar sesión cuando lo necesites.</p>
+          <button class="primary" type="button" (click)="logout()">Cerrar sesión</button>
+        </article>
+      </div>
+
+      <div class="profile-footer">
+        <a routerLink="/">Volver al menú</a>
+      </div>
+    </div>
+  } @else {
+    <div class="profile-card empty">
+      <p class="message">No hay sesión activa.</p>
+      <a class="primary" routerLink="/login">Ir a login</a>
+    </div>
+  }
+</section>
