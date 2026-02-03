@@ -2,6 +2,18 @@
 <div class="joc">
   <form class="form" (ngSubmit)="submitOrder()">
 
+    <label>
+      Inrodueix el nivell de dificultat
+      <input
+        type="nivell"
+        [ngModel]="nivell()"
+        (ngModelChange)="nivell.set($event)"
+        name="nivell"
+        required
+      />
+    </label>
+
+    <button class="primary" type="submit">Confirmar nivell</button>
   </form>
 
 </div>
