@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import foodsRouter from './routes/foods.js';
 import ordersRouter from './routes/orders.js';
 import authRouter from './routes/auth.js';
+import puntuacionsRouter from './routes/puntuacions.js'
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use('/api/foods', foodsRouter);
 app.use('/api/orders', ordersRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/puntuacions', puntuacionsRouter);
 
 app.use((error, _req, res, _next) => {
   console.error(error?.message ?? 'Error inesperado');
