@@ -6,6 +6,7 @@ import { SignupPage } from './pages/signup/signup';
 import { ProfilePage } from './pages/profile/profile';
 import { authGuard } from './guards/auth.guard';
 import { IngredientsPage } from './pages/ingredients/ingredients';
+import { JocPage } from './pages/joc/joc';
 
 export const routes: Routes = [
   { path: '', component: FoodOrder },
@@ -14,5 +15,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginPage },
   { path: 'registro', component: SignupPage },
   { path: 'perfil', component: ProfilePage, canActivate: [authGuard] },
+  { path: 'joc', component: JocPage },
   { path: '**', redirectTo: '' },
 ];
