@@ -2,9 +2,7 @@ import { Router } from 'express';
 import { Puntuacio } from '../models/Puntuacio.js';
 
 
-
-const router = Router();
-
+const router = Router(); 
 
 
 router.post('/puntuacions', async (req, res, next) => {
@@ -15,7 +13,7 @@ router.post('/puntuacions', async (req, res, next) => {
       return;
     }
 
-  
+    
   } catch (error) {
     next(error);
   }
