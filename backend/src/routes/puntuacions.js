@@ -15,6 +15,7 @@ router.post('/puntuacions', async (req, res, next) => {
       return;
     }
 
+  
   } catch (error) {
     next(error);
   }
