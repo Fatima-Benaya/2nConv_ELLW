@@ -1,7 +1,18 @@
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import { Puntuacio } from '../models/Puntuacio.js';
 
 const router = Router();
+
+const rateLimiter = rateLimit({
+  windowMs: 60_000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Massa sol·licituds, torna-ho a intentar més tard.' },
+});
+
+router.use(rateLimiter);
 
 function validatePayload(body) {
   const { nom_usuari, puntuacio, nivell } = body;

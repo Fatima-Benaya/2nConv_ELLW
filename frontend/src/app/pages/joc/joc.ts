@@ -133,6 +133,7 @@ export class JocPage implements OnDestroy {
     this.grid.set(grid);
   }
 
+  // Fisher-Yates shuffle algorithm
   private shuffleArray<T>(array: T[]): void {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -215,7 +216,6 @@ export class JocPage implements OnDestroy {
         nom_usuari: nom,
         puntuacio: this.totalTimePlayed(),
         nivell: this.nivell(),
-        data_joc: new Date().toISOString(),
       })
       .subscribe({
         next: (saved) => {
