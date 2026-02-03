@@ -9,6 +9,7 @@ import { AuthService } from '../../services/auth';
   imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
+  
 })
 export class LoginPage {
   private readonly auth = inject(AuthService);
