@@ -15,11 +15,10 @@ const PuntuacioSchema = new mongoose.Schema(
     },
 
     nivell: {
-      type: Number,
+      type: String,
       required: true,
-      min : 0,
     },
-    
+
   },
   { timestamps: true }
 );
